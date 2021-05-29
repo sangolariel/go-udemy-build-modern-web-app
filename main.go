@@ -3,10 +3,13 @@ package main
 import "fmt"
 
 func main() {
-	sayHello := _string("Hello")
-	fmt.Println(sayHello)
+	color := "Green"
+	fmt.Println("Color before set: ", color)
+	changeColor(&color)
+	fmt.Println("Color after set: ", color)
 }
 
-func _string(s string) string {
-	return s
+func changeColor(s *string) {
+	fmt.Println("Color before set: ", s)
+	*s = "Red"
 }
