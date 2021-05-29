@@ -1,15 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-func main() {
-	color := "Green"
-	fmt.Println("Color before set: ", color)
-	changeColor(&color)
-	fmt.Println("Color after set: ", color)
+type User struct {
+	FirstName   string
+	LastName    string
+	PhoneNumber string
+	BirthDate   time.Time
 }
 
-func changeColor(s *string) {
-	fmt.Println("Color before set: ", s)
-	*s = "Red"
+func main() {
+	user := User{
+		FirstName:   "S-Tech",
+		LastName:    "Lab",
+		PhoneNumber: "0123",
+	}
+	fmt.Println(user.FirstName, user.LastName, user.PhoneNumber, user.BirthDate)
 }
