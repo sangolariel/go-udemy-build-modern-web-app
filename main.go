@@ -2,21 +2,16 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"net/http"
 )
 
-type User struct {
-	FirstName   string
-	LastName    string
-	PhoneNumber string
-	BirthDate   time.Time
-}
-
 func main() {
-	user := User{
-		FirstName:   "S-Tech",
-		LastName:    "Lab",
-		PhoneNumber: "0123",
-	}
-	fmt.Println(user.FirstName, user.LastName, user.PhoneNumber, user.BirthDate)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		_, err := fmt.Fprintf(w, "Hello world!")
+		if err != nil {
+			fmt.Println(err)
+		}
+	})
+
+	_ = http.ListenAndServe(":8080", nil)
 }
