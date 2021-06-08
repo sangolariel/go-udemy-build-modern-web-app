@@ -1,8 +1,10 @@
 package render
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"path/filepath"
 )
@@ -10,19 +12,26 @@ import (
 var function = template.FuncMap{}
 
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	_, err := RenderTemplateTest(w)
+	tc, err := CreateTemplateCatche()
 	if err != nil {
-		fmt.Println("Error getting template catche", err)
+		log.Fatal(err)
+	}
+	t, ok := tc[tmpl]
+	if !ok {
+		log.Fatal(err)
+	}
+	buf := new(bytes.Buffer)
+
+	_ = t.Execute(buf, nil)
+
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		fmt.Println("Error writing template browser", err)
 	}
 
-	parsedTemp, _ := template.ParseFiles("./templates/" + tmpl)
-	err = parsedTemp.Execute(w, nil)
-	if err != nil {
-		fmt.Println("error parsing template", err)
-	}
 }
 
-func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, error) {
+func CreateTemplateCatche() (map[string]*template.Template, error) {
 	myCatche := map[string]*template.Template{}
 
 	pages, err := filepath.Glob("./templates/*.page.tmpl")
@@ -33,7 +42,6 @@ func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, e
 
 	for _, page := range pages {
 		name := filepath.Base(page)
-		fmt.Println("Page is currently", page)
 		ts, err := template.New(name).Funcs(function).ParseFiles(page)
 		if err != nil {
 			return myCatche, err
