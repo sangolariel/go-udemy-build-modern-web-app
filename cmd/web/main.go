@@ -19,9 +19,15 @@ func main() {
 		log.Fatal("Can't create Template catche")
 	}
 	app.TemplateCatche = tc
+	app.UseCatche = false
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	repo := handlers.NewRepository(&app)
+	handlers.NewHandler(repo)
+
+	render.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
 
 	fmt.Printf("Aplication open on port %s", port)
 

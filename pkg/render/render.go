@@ -2,32 +2,39 @@ package render
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/sangolariel/go-udemy-build-modern-web-app/pkg/config"
 )
 
 var function = template.FuncMap{}
 
+var app *config.AppConfig
+
+func NewTemplates(config *config.AppConfig) {
+	app = config
+}
+
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	tc, err := CreateTemplateCatche()
-	if err != nil {
-		log.Fatal(err)
+	var tc map[string]*template.Template
+	if app.UseCatche {
+		tc = app.TemplateCatche
+	} else {
+		tc, _ = CreateTemplateCatche()
 	}
+
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("Could not get a template from template catche")
 	}
 	buf := new(bytes.Buffer)
 
 	_ = t.Execute(buf, nil)
 
-	_, err = buf.WriteTo(w)
-	if err != nil {
-		fmt.Println("Error writing template browser", err)
-	}
+	_, _ = buf.WriteTo(w)
 
 }
 
