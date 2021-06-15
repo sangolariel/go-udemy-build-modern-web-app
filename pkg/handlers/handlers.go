@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/sangolariel/go-udemy-build-modern-web-app/pkg/config"
+	"github.com/sangolariel/go-udemy-build-modern-web-app/pkg/models"
 	"github.com/sangolariel/go-udemy-build-modern-web-app/pkg/render"
 )
 
@@ -26,9 +27,15 @@ func NewHandler(r *Repository) {
 }
 
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.tmpl")
+	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.tmpl")
+	// perform some logic
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hope to see you again!"
+	//send data to the template
+	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
