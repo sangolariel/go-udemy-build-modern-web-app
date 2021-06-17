@@ -9,3 +9,9 @@
 ## Content
 
 - Create a base config web application.
+
+## Run app
+
+```
+go run cmd/web/*.go
+```
